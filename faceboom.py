@@ -15,7 +15,7 @@ def write(text):
     sys.stdout.write(text)
     sys.stdout.flush()
 
-versionPath = "core"+os.sep+"version.txt"
+versionPath = os.path.join("core", "version.txt")
 
 errMsg = lambda msg: write(rd+"\n["+yl+"!"+rd+"] Error: "+yl+msg+rd+ " !!!\n"+wi)
 
@@ -24,7 +24,6 @@ except ImportError:
     errMsg("[ requests ] module is missing")
     print("  [*] Please Use: 'pip install requests' to install it :)")
     sys.exit(1)
-
 try:import mechanize
 except ImportError:
     errMsg("[ mechanize ] module is missing")
@@ -72,11 +71,11 @@ class FaceBoom(object):
     def get_profile_id(self, target_profile):
         try:
             print(gr+"\n["+wi+"*"+gr+"] geting target Profile Id... please wait"+wi)
-            idre = re.compile('"entity_id":"([0-9]+)"')
+            idre = re.compile('(?<="userID":").*?(?=")')
             con = requests.get(target_profile).text
-            idis = idre.findall(con)
-            print(wi+"\n["+gr+"+"+wi+"]"+gr+" Target Profile"+wi+" ID: "+yl+idis[0]+wi)
-        except IndexError:
+            idis = idre.search(con).group()
+            print(wi+"\n["+gr+"+"+wi+"]"+gr+" Target Profile"+wi+" ID: "+yl+idis+wi)
+        except Exception:
             errMsg("Please Check Your Victim's Profile URL")
             sys.exit(1)
 
@@ -269,11 +268,8 @@ def Main():
        print(parse.usage)
        sys.exit(1)
 
-
 if __name__=='__main__':
     Main()
-
-
 ##############################################################
 #####################                #########################
 #####################   END OF TOOL  #########################
